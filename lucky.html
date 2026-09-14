@@ -1,0 +1,687 @@
+<style>
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+  user-select:none;
+  -webkit-tap-highlight-color:transparent;
+}
+
+body{
+  background:#05070c;
+  font-family:Arial,sans-serif;
+  overflow:hidden;
+}
+
+#game{
+  width:100%;
+  max-width:420px;
+  height:650px;
+  margin:auto;
+  position:relative;
+  overflow:hidden;
+  background:
+    radial-gradient(circle at 50% 25%,#25203c,#090b14 55%,#030408);
+  color:white;
+}
+
+/* BACKGROUND */
+
+.bg{
+  position:absolute;
+  inset:0;
+  background-image:
+    radial-gradient(circle,rgba(255,255,255,.7) 1px,transparent 1px);
+  background-size:55px 55px;
+  opacity:.12;
+}
+
+/* HEADER */
+
+.header{
+  position:relative;
+  z-index:5;
+  text-align:center;
+  padding-top:24px;
+}
+
+.logo{
+  font-size:28px;
+  font-weight:1000;
+  letter-spacing:4px;
+  color:#f3d86b;
+  text-shadow:
+    0 0 8px #f3c735,
+    0 0 25px #ff9d00;
+}
+
+.sub{
+  margin-top:5px;
+  color:#7e8498;
+  font-size:9px;
+  letter-spacing:3px;
+}
+
+/* POINT */
+
+.pointsBox{
+  position:relative;
+  z-index:5;
+  width:180px;
+  margin:24px auto 0;
+  padding:10px;
+  text-align:center;
+  border:1px solid #4a425f;
+  border-radius:12px;
+  background:rgba(10,10,20,.8);
+}
+
+.pointsLabel{
+  font-size:8px;
+  color:#777b91;
+  letter-spacing:2px;
+}
+
+#points{
+  margin-top:3px;
+  font-size:22px;
+  font-weight:900;
+  color:#fff;
+}
+
+/* MACHINE */
+
+.machine{
+  position:relative;
+  z-index:5;
+  width:94%;
+  margin:28px auto 0;
+  padding:20px 12px 25px;
+  border:2px solid #564866;
+  border-radius:25px;
+  background:
+    linear-gradient(#171426,#0d0e18);
+  box-shadow:
+    0 0 20px rgba(181,76,255,.18),
+    inset 0 0 30px rgba(0,0,0,.5);
+}
+
+/* REELS */
+
+.reels{
+  display:flex;
+  gap:8px;
+  justify-content:center;
+}
+
+.reel{
+  width:30%;
+  height:105px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border:2px solid #3d4155;
+  border-radius:15px;
+  background:#070911;
+  overflow:hidden;
+  box-shadow:
+    inset 0 0 20px rgba(0,0,0,.8),
+    0 0 10px rgba(255,255,255,.04);
+}
+
+.symbol{
+  font-size:47px;
+  filter:drop-shadow(0 0 8px rgba(255,255,255,.25));
+}
+
+.spinning .symbol{
+  animation:spinSymbol .08s linear infinite;
+}
+
+@keyframes spinSymbol{
+  0%{transform:translateY(-20px)}
+  50%{transform:translateY(20px)}
+  100%{transform:translateY(-20px)}
+}
+
+/* RESULT */
+
+#result{
+  height:30px;
+  margin-top:16px;
+  text-align:center;
+  font-size:13px;
+  font-weight:900;
+  color:#9aa1b5;
+}
+
+.win{
+  color:#ffe45c!important;
+  text-shadow:0 0 12px #ffae00;
+}
+
+.bigwin{
+  color:#d87cff!important;
+  text-shadow:
+    0 0 10px #b62cff,
+    0 0 25px #8b20ff;
+  animation:pulse .5s infinite alternate;
+}
+
+@keyframes pulse{
+  from{transform:scale(1)}
+  to{transform:scale(1.08)}
+}
+
+/* BUTTON */
+
+#spin{
+  display:block;
+  width:85%;
+  height:54px;
+  margin:8px auto 0;
+  border:1px solid #ffd84c;
+  border-radius:13px;
+  background:
+    linear-gradient(#493b12,#211b0b);
+  color:#ffe875;
+  font-size:16px;
+  font-weight:1000;
+  letter-spacing:2px;
+  box-shadow:
+    0 0 18px rgba(255,191,40,.2);
+}
+
+#spin:active{
+  transform:scale(.95);
+}
+
+#spin:disabled{
+  opacity:.4;
+}
+
+/* COMBO */
+
+.combo{
+  margin-top:15px;
+  text-align:center;
+  font-size:10px;
+  color:#737a8d;
+}
+
+#combo{
+  color:#fff;
+  font-weight:900;
+}
+
+/* HISTORY */
+
+.history{
+  position:relative;
+  z-index:5;
+  margin:18px auto;
+  width:94%;
+  display:flex;
+  justify-content:center;
+  gap:7px;
+}
+
+.history span{
+  width:38px;
+  height:38px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border:1px solid #34394b;
+  border-radius:9px;
+  background:#0d1019;
+  font-size:20px;
+}
+
+/* RESET */
+
+#reset{
+  position:absolute;
+  bottom:12px;
+  left:50%;
+  transform:translateX(-50%);
+  border:0;
+  background:none;
+  color:#51586b;
+  font-size:8px;
+}
+
+/* FLASH */
+
+.flash{
+  animation:flash .25s;
+}
+
+@keyframes flash{
+  0%{
+    box-shadow:0 0 0 transparent;
+  }
+  50%{
+    box-shadow:
+      0 0 60px #f7d447,
+      inset 0 0 40px #5c4810;
+  }
+  100%{
+    box-shadow:0 0 0 transparent;
+  }
+}
+
+/* SMALL TEXT */
+
+.note{
+  position:absolute;
+  bottom:28px;
+  left:0;
+  right:0;
+  text-align:center;
+  font-size:7px;
+  color:#414758;
+  letter-spacing:1px;
+}
+</style>
+
+
+<div id="game">
+
+  <div class="bg"></div>
+
+  <div class="header">
+    <div class="logo">
+      FARZ
+    </div>
+
+    <div class="sub">
+      LUCKY SPIN // ARCADE SIMULATION
+    </div>
+  </div>
+
+
+  <div class="pointsBox">
+
+    <div class="pointsLabel">
+      FICTIONAL POINTS
+    </div>
+
+    <div id="points">
+      1000
+    </div>
+
+  </div>
+
+
+  <div class="machine" id="machine">
+
+    <div class="reels">
+
+      <div class="reel">
+        <div class="symbol" id="r1">🍒</div>
+      </div>
+
+      <div class="reel">
+        <div class="symbol" id="r2">⭐</div>
+      </div>
+
+      <div class="reel">
+        <div class="symbol" id="r3">💎</div>
+      </div>
+
+    </div>
+
+
+    <div id="result">
+      PRESS SPIN
+    </div>
+
+
+    <button id="spin">
+      ✦ SPIN ✦
+    </button>
+
+
+    <div class="combo">
+      COMBO:
+      <span id="combo">0</span>
+    </div>
+
+  </div>
+
+
+  <div class="history">
+
+    <span id="h1">?</span>
+    <span id="h2">?</span>
+    <span id="h3">?</span>
+    <span id="h4">?</span>
+    <span id="h5">?</span>
+
+  </div>
+
+
+  <button id="reset">
+    RESET SIMULATION
+  </button>
+
+
+  <div class="note">
+    NO MONEY • NO BETTING • FICTIONAL POINTS ONLY
+  </div>
+
+</div>
+
+
+<script>
+
+const symbols=[
+  "🍒",
+  "🍋",
+  "⭐",
+  "🔔",
+  "💎",
+  "🔥"
+];
+
+const pointsEl=
+  document.getElementById("points");
+
+const resultEl=
+  document.getElementById("result");
+
+const spinBtn=
+  document.getElementById("spin");
+
+const machine=
+  document.getElementById("machine");
+
+const reels=[
+  document.getElementById("r1"),
+  document.getElementById("r2"),
+  document.getElementById("r3")
+];
+
+let points=1000;
+let combo=0;
+let spinning=false;
+
+let history=[];
+
+
+/* RANDOM SYMBOL */
+
+function randomSymbol(){
+
+  return symbols[
+    Math.floor(
+      Math.random()*symbols.length
+    )
+  ];
+
+}
+
+
+/* UPDATE POINT */
+
+function updatePoints(){
+
+  pointsEl.textContent=
+    points.toLocaleString();
+
+}
+
+
+/* SPIN */
+
+function spin(){
+
+  if(spinning)
+    return;
+
+  spinning=true;
+
+  spinBtn.disabled=true;
+
+  resultEl.className="";
+  resultEl.textContent=
+    "SPINNING...";
+
+  reels.forEach(r=>{
+    r.parentElement.classList.add(
+      "spinning"
+    );
+  });
+
+
+  /*
+    Ini bukan taruhan.
+    Setiap spin hanya simulasi
+    dan tidak memakai uang.
+  */
+
+  let duration=850;
+
+  reels.forEach((r,i)=>{
+
+    setTimeout(()=>{
+
+      const value=
+        randomSymbol();
+
+      r.textContent=value;
+
+      r.parentElement.classList.remove(
+        "spinning"
+      );
+
+      if(i===2){
+
+        finishSpin();
+
+      }
+
+    },duration+(i*300));
+
+  });
+
+}
+
+
+/* SELESAI */
+
+function finishSpin(){
+
+  spinning=false;
+
+  spinBtn.disabled=false;
+
+  const result=
+    reels.map(
+      r=>r.textContent
+    );
+
+
+  /* THREE SAME */
+
+  if(
+    result[0]===result[1] &&
+    result[1]===result[2]
+  ){
+
+    combo++;
+
+    let reward=
+      250+(combo*50);
+
+    points+=reward;
+
+    resultEl.textContent=
+      "✦ TRIPLE MATCH! +"+
+      reward+
+      " POINTS";
+
+    resultEl.className=
+      "bigwin";
+
+    machine.classList.remove(
+      "flash"
+    );
+
+    void machine.offsetWidth;
+
+    machine.classList.add(
+      "flash"
+    );
+
+
+  }
+
+  /* TWO SAME */
+
+  else if(
+    result[0]===result[1] ||
+    result[1]===result[2] ||
+    result[0]===result[2]
+  ){
+
+    combo++;
+
+    let reward=
+      75+(combo*15);
+
+    points+=reward;
+
+    resultEl.textContent=
+      "★ MATCH! +"+
+      reward+
+      " POINTS";
+
+    resultEl.className=
+      "win";
+
+  }
+
+  /* NOTHING */
+
+  else{
+
+    combo=0;
+
+    resultEl.textContent=
+      "TRY AGAIN";
+
+    resultEl.className="";
+
+  }
+
+
+  updatePoints();
+
+  document.getElementById(
+    "combo"
+  ).textContent=combo;
+
+  addHistory(result[2]);
+
+}
+
+
+/* HISTORY */
+
+function addHistory(symbol){
+
+  history.unshift(symbol);
+
+  history=
+    history.slice(0,5);
+
+  const slots=[
+    "h1",
+    "h2",
+    "h3",
+    "h4",
+    "h5"
+  ];
+
+  slots.forEach((id,i)=>{
+
+    document.getElementById(id)
+      .textContent=
+      history[i] || "?";
+
+  });
+
+}
+
+
+/* RESET */
+
+document.getElementById(
+  "reset"
+).onclick=()=>{
+
+  points=1000;
+  combo=0;
+  history=[];
+
+  reels[0].textContent="🍒";
+  reels[1].textContent="⭐";
+  reels[2].textContent="💎";
+
+  resultEl.textContent=
+    "PRESS SPIN";
+
+  resultEl.className="";
+
+  document.getElementById(
+    "combo"
+  ).textContent="0";
+
+  [
+    "h1",
+    "h2",
+    "h3",
+    "h4",
+    "h5"
+  ].forEach(id=>{
+
+    document.getElementById(id)
+      .textContent="?";
+
+  });
+
+  updatePoints();
+
+};
+
+
+/* BUTTON */
+
+spinBtn.onclick=spin;
+
+
+/* KEYBOARD */
+
+document.addEventListener(
+  "keydown",
+  e=>{
+
+    if(
+      e.key===" " ||
+      e.key==="Enter"
+    ){
+
+      e.preventDefault();
+
+      spin();
+
+    }
+
+  }
+);
+
+updatePoints();
+
+</script>
