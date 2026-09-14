@@ -1,0 +1,568 @@
+<style>
+*{
+  -webkit-tap-highlight-color:transparent;
+  user-select:none;
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
+
+body{
+  background:transparent;
+  font-family:-apple-system,BlinkMacSystemFont,sans-serif;
+  color:#fff;
+  overflow:hidden;
+}
+
+.wrapper{
+  width:100%;
+  max-width:480px;
+  margin:auto;
+  padding:12px;
+}
+
+.card{
+  background:linear-gradient(
+    180deg,
+    rgba(15,18,26,.97),
+    rgba(10,12,18,.97)
+  );
+  border:2px solid #3b82f6;
+  border-radius:20px;
+  padding:14px;
+  box-shadow:0 14px 44px rgba(0,0,0,.75);
+}
+
+.header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:12px;
+}
+
+.title{
+  font-size:11px;
+  letter-spacing:1.4px;
+  color:#3b82f6;
+  font-weight:900;
+}
+
+.status{
+  font-size:12px;
+  font-weight:800;
+  background:rgba(255,255,255,.1);
+  padding:5px 9px;
+  border-radius:8px;
+}
+
+.info{
+  display:flex;
+  justify-content:space-between;
+  margin-bottom:10px;
+  font-size:11px;
+  color:#94a3b8;
+  font-weight:800;
+}
+
+#board{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:8px;
+  width:100%;
+}
+
+.tile{
+  aspect-ratio:1;
+  border-radius:12px;
+  background:#1e293b;
+  border:2px solid #334155;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  font-size:28px;
+  cursor:pointer;
+  transition:.18s;
+  transform:scale(1);
+}
+
+.tile:active{
+  transform:scale(.92);
+}
+
+.tile.open{
+  background:#2563eb;
+  border-color:#60a5fa;
+}
+
+.tile.matched{
+  background:#047857;
+  border-color:#10b981;
+  transform:scale(.96);
+}
+
+.tile.wrong{
+  background:#991b1b;
+  border-color:#ef4444;
+}
+
+.hidden{
+  visibility:hidden;
+}
+
+.controls{
+  display:flex;
+  gap:10px;
+  margin-top:12px;
+}
+
+.btn{
+  flex:1;
+  border:0;
+  border-radius:11px;
+  padding:12px;
+  color:#fff;
+  font-size:13px;
+  font-weight:900;
+  cursor:pointer;
+}
+
+.btn-start{
+  background:linear-gradient(135deg,#3b82f6,#2563eb);
+}
+
+.btn-reset{
+  background:linear-gradient(135deg,#ef4444,#b91c1c);
+}
+
+.result{
+  display:none;
+  margin-top:12px;
+  padding:12px;
+  text-align:center;
+  background:rgba(16,185,129,.1);
+  border:1px solid rgba(16,185,129,.4);
+  border-radius:12px;
+}
+
+.result b{
+  color:#10b981;
+  font-size:18px;
+}
+
+.credit{
+  margin-top:12px;
+  padding-top:8px;
+  border-top:1px dashed rgba(255,255,255,.12);
+  text-align:center;
+  font-size:10px;
+  color:#94a3b8;
+  font-weight:800;
+  letter-spacing:1px;
+}
+
+.credit span{
+  color:#3b82f6;
+}
+</style>
+
+<body>
+
+<div class="wrapper">
+
+  <div class="card">
+
+    <div class="header">
+
+      <div class="title">
+        🧠 FARZHDYTL-MINI MEMORY
+      </div>
+
+      <div class="status" id="status">
+        READY
+      </div>
+
+    </div>
+
+
+    <div class="info">
+
+      <div>
+        MATCH: <span id="matched">0</span>/8
+      </div>
+
+      <div>
+        MOVES: <span id="moves">0</span>
+      </div>
+
+    </div>
+
+
+    <div id="board"></div>
+
+
+    <div class="result" id="result">
+
+      🏆 <b id="resultText"></b>
+
+      <div style="font-size:11px;margin-top:4px;color:#94a3b8;">
+        Semua pasangan berhasil ditemukan!
+      </div>
+
+    </div>
+
+
+    <div class="controls">
+
+      <button class="btn btn-start" id="start">
+        ▶ START
+      </button>
+
+      <button class="btn btn-reset" id="reset">
+        🔄 RESET
+      </button>
+
+    </div>
+
+
+    <div class="credit">
+      ENGINEERED BY <span>FARZHDYTL</span> ⚡
+    </div>
+
+  </div>
+
+</div>
+
+
+<script>
+
+(function(){
+
+/* =========================
+   DATA GAME
+========================= */
+
+var symbols = [
+  "⚡","🔥","👾","🎮",
+  "🚀","💎","☠️","🌙"
+];
+
+var cards = [];
+
+var first = null;
+var second = null;
+
+var locked = true;
+
+var matched = 0;
+var moves = 0;
+
+
+/* =========================
+   ELEMENT
+========================= */
+
+var board = document.getElementById("board");
+
+var status = document.getElementById("status");
+
+var matchedEl = document.getElementById("matched");
+
+var movesEl = document.getElementById("moves");
+
+var result = document.getElementById("result");
+
+var resultText = document.getElementById("resultText");
+
+
+/* =========================
+   SHUFFLE
+========================= */
+
+function shuffle(array){
+
+  for(
+    var i=array.length-1;
+    i>0;
+    i--
+  ){
+
+    var j=Math.floor(
+      Math.random()*(i+1)
+    );
+
+    var temp=array[i];
+
+    array[i]=array[j];
+
+    array[j]=temp;
+
+  }
+
+  return array;
+
+}
+
+
+/* =========================
+   BUAT BOARD
+========================= */
+
+function createBoard(){
+
+  board.innerHTML="";
+
+  cards = shuffle(
+    symbols.concat(symbols)
+  );
+
+  first=null;
+  second=null;
+
+  matched=0;
+  moves=0;
+
+  locked=true;
+
+  matchedEl.textContent="0";
+
+  movesEl.textContent="0";
+
+  result.style.display="none";
+
+  status.textContent="MEMORIZE";
+
+
+  for(
+    var i=0;
+    i<cards.length;
+    i++
+  ){
+
+    var tile=document.createElement("div");
+
+    tile.className="tile open";
+
+    tile.dataset.index=i;
+
+    tile.textContent=cards[i];
+
+    tile.onclick=function(){
+
+      clickCard(this);
+
+    };
+
+    board.appendChild(tile);
+
+  }
+
+
+  /*
+    Kartu dibuka sebentar
+    supaya pemain bisa menghafalnya
+  */
+
+  setTimeout(function(){
+
+    var tiles=document.querySelectorAll(".tile");
+
+    for(
+      var i=0;
+      i<tiles.length;
+      i++
+    ){
+
+      tiles[i].classList.remove("open");
+
+      tiles[i].textContent="❔";
+
+    }
+
+    locked=false;
+
+    status.textContent="PLAY";
+
+  },2000);
+
+}
+
+
+/* =========================
+   KLIK KARTU
+========================= */
+
+function clickCard(tile){
+
+  if(locked) return;
+
+  if(
+    tile.classList.contains("matched") ||
+    tile===first
+  ){
+
+    return;
+
+  }
+
+
+  var index=parseInt(
+    tile.dataset.index
+  );
+
+
+  tile.classList.add("open");
+
+  tile.textContent=cards[index];
+
+
+  if(!first){
+
+    first=tile;
+
+    return;
+
+  }
+
+
+  second=tile;
+
+  moves++;
+
+  movesEl.textContent=moves;
+
+  locked=true;
+
+
+  var firstIndex=parseInt(
+    first.dataset.index
+  );
+
+  var secondIndex=parseInt(
+    second.dataset.index
+  );
+
+
+  /*
+    Jika simbol sama
+  */
+
+  if(
+    cards[firstIndex] ===
+    cards[secondIndex]
+  ){
+
+    first.classList.add("matched");
+
+    second.classList.add("matched");
+
+    matched++;
+
+    matchedEl.textContent=matched;
+
+    first=null;
+
+    second=null;
+
+    locked=false;
+
+    if(matched===8){
+
+      finishGame();
+
+    }
+
+  }else{
+
+    /*
+      Jika salah
+    */
+
+    first.classList.add("wrong");
+
+    second.classList.add("wrong");
+
+
+    setTimeout(function(){
+
+      first.classList.remove(
+        "open",
+        "wrong"
+      );
+
+      second.classList.remove(
+        "open",
+        "wrong"
+      );
+
+      first.textContent="❔";
+
+      second.textContent="❔";
+
+      first=null;
+
+      second=null;
+
+      locked=false;
+
+    },650);
+
+  }
+
+}
+
+
+/* =========================
+   GAME SELESAI
+========================= */
+
+function finishGame(){
+
+  locked=true;
+
+  status.textContent="COMPLETE";
+
+  resultText.textContent=
+    "COMPLETE IN "+moves+" MOVES";
+
+  result.style.display="block";
+
+}
+
+
+/* =========================
+   START
+========================= */
+
+document.getElementById(
+  "start"
+).onclick=function(){
+
+  createBoard();
+
+};
+
+
+/* =========================
+   RESET
+========================= */
+
+document.getElementById(
+  "reset"
+).onclick=function(){
+
+  createBoard();
+
+};
+
+
+/* =========================
+   INITIAL
+========================= */
+
+createBoard();
+
+})();
+
+</script>
+
+</body>
