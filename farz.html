@@ -1,0 +1,612 @@
+<style>
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+  user-select:none;
+  -webkit-tap-highlight-color:transparent;
+}
+
+body{
+  background:#03050a;
+  font-family:Arial,sans-serif;
+  overflow:hidden;
+}
+
+#card{
+  width:100%;
+  max-width:430px;
+  min-height:650px;
+  margin:auto;
+  position:relative;
+  overflow:hidden;
+  color:white;
+  background:
+    radial-gradient(circle at 20% 15%,#162d3d 0,transparent 32%),
+    radial-gradient(circle at 90% 80%,#29133d 0,transparent 35%),
+    #05070d;
+}
+
+/* GRID */
+
+#card:before{
+  content:"";
+  position:absolute;
+  inset:0;
+  opacity:.13;
+  background-image:
+    linear-gradient(#61eaff 1px,transparent 1px),
+    linear-gradient(90deg,#61eaff 1px,transparent 1px);
+  background-size:35px 35px;
+  transform:perspective(300px) rotateX(55deg) scale(1.5);
+  transform-origin:center bottom;
+}
+
+/* GLOW */
+
+.glow{
+  position:absolute;
+  width:190px;
+  height:190px;
+  border-radius:50%;
+  background:#21dfff;
+  filter:blur(100px);
+  opacity:.09;
+  top:80px;
+  left:-80px;
+}
+
+.glow2{
+  position:absolute;
+  width:180px;
+  height:180px;
+  border-radius:50%;
+  background:#a93cff;
+  filter:blur(100px);
+  opacity:.1;
+  right:-70px;
+  bottom:80px;
+}
+
+/* TOP */
+
+.top{
+  position:relative;
+  z-index:2;
+  padding:20px 20px 8px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.brand{
+  font-size:12px;
+  font-weight:900;
+  letter-spacing:3px;
+  color:#67eaff;
+  text-shadow:0 0 12px #32dfff;
+}
+
+.status{
+  font-size:8px;
+  padding:6px 9px;
+  border:1px solid #275060;
+  border-radius:20px;
+  color:#62e8ff;
+  background:#07141a;
+  letter-spacing:1px;
+}
+
+/* MAIN CARD */
+
+.main{
+  position:relative;
+  z-index:2;
+  margin:16px 14px 0;
+  padding:20px;
+  border:1px solid #28394a;
+  border-radius:22px;
+  background:
+    linear-gradient(
+      135deg,
+      rgba(15,27,39,.94),
+      rgba(7,10,18,.94)
+    );
+  box-shadow:
+    0 20px 50px rgba(0,0,0,.45),
+    inset 0 0 30px rgba(70,220,255,.035);
+}
+
+/* AVATAR */
+
+.profile{
+  display:flex;
+  align-items:center;
+  gap:15px;
+}
+
+.avatar{
+  width:70px;
+  height:70px;
+  flex:none;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:18px;
+  border:1px solid #5deaff;
+  background:
+    linear-gradient(135deg,#0b2632,#111321);
+  color:#71edff;
+  font-size:23px;
+  font-weight:1000;
+  letter-spacing:-2px;
+  box-shadow:
+    0 0 20px rgba(50,220,255,.2),
+    inset 0 0 20px rgba(50,220,255,.08);
+}
+
+.name{
+  font-size:20px;
+  font-weight:1000;
+  letter-spacing:.5px;
+}
+
+.role{
+  margin-top:6px;
+  color:#78899a;
+  font-size:9px;
+  letter-spacing:2px;
+}
+
+.line{
+  height:1px;
+  margin:20px 0;
+  background:
+    linear-gradient(
+      90deg,
+      transparent,
+      #38596b,
+      transparent
+    );
+}
+
+/* INFO */
+
+.info{
+  display:grid;
+  gap:8px;
+}
+
+.item{
+  min-height:43px;
+  display:flex;
+  align-items:center;
+  gap:11px;
+  padding:8px 10px;
+  border:1px solid #202d3b;
+  border-radius:11px;
+  background:rgba(4,8,14,.65);
+}
+
+.icon{
+  width:28px;
+  height:28px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:8px;
+  background:#101b26;
+  font-size:13px;
+}
+
+.label{
+  color:#566778;
+  font-size:7px;
+  letter-spacing:1.5px;
+}
+
+.value{
+  margin-top:3px;
+  color:#d9e6ed;
+  font-size:11px;
+  font-weight:700;
+}
+
+/* SOCIAL */
+
+.socialTitle{
+  margin:19px 2px 9px;
+  color:#536576;
+  font-size:8px;
+  font-weight:900;
+  letter-spacing:2px;
+}
+
+.social{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+}
+
+.socialItem{
+  padding:11px;
+  border:1px solid #202d3b;
+  border-radius:11px;
+  background:#080d15;
+}
+
+.socialName{
+  color:#66788a;
+  font-size:7px;
+  letter-spacing:1px;
+}
+
+.socialUser{
+  margin-top:5px;
+  color:#fff;
+  font-size:10px;
+  font-weight:900;
+}
+
+/* BOTTOM */
+
+.bottom{
+  position:relative;
+  z-index:2;
+  margin:14px;
+  padding:15px 17px;
+  border:1px solid #293746;
+  border-radius:16px;
+  background:#080c14;
+}
+
+.bottomTop{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.creator{
+  color:#6deaff;
+  font-size:9px;
+  font-weight:900;
+  letter-spacing:2px;
+}
+
+.version{
+  color:#505f70;
+  font-size:8px;
+}
+
+.credit{
+  margin-top:9px;
+  color:#647384;
+  font-size:8px;
+  line-height:1.6;
+}
+
+.credit b{
+  color:#cbd7df;
+}
+
+/* CORNER */
+
+.corner{
+  position:absolute;
+  z-index:3;
+  width:35px;
+  height:35px;
+  border-color:#4bdfff;
+  opacity:.8;
+}
+
+.c1{
+  top:12px;
+  left:12px;
+  border-top:1px solid;
+  border-left:1px solid;
+}
+
+.c2{
+  top:12px;
+  right:12px;
+  border-top:1px solid;
+  border-right:1px solid;
+}
+
+.c3{
+  bottom:12px;
+  left:12px;
+  border-bottom:1px solid;
+  border-left:1px solid;
+}
+
+.c4{
+  bottom:12px;
+  right:12px;
+  border-bottom:1px solid;
+  border-right:1px solid;
+}
+
+/* FOOTER */
+
+.footer{
+  position:absolute;
+  z-index:3;
+  left:0;
+  right:0;
+  bottom:12px;
+  text-align:center;
+  color:#374452;
+  font-size:7px;
+  letter-spacing:2px;
+}
+
+/* MUSIC */
+
+#bgMusic{
+  display:none;
+}
+</style>
+
+
+<div id="card">
+
+  <div class="glow"></div>
+  <div class="glow2"></div>
+
+  <div class="corner c1"></div>
+  <div class="corner c2"></div>
+  <div class="corner c3"></div>
+  <div class="corner c4"></div>
+
+
+  <div class="top">
+
+    <div class="brand">
+      FARZHDYTL
+    </div>
+
+    <div class="status">
+      ● VERIFIED CREATOR
+    </div>
+
+  </div>
+
+
+  <div class="main">
+
+    <div class="profile">
+
+      <div class="avatar">
+        FH
+      </div>
+
+      <div>
+
+        <div class="name">
+          FACHRI HIDAYATULLAH
+        </div>
+
+        <div class="role">
+          OWNER • BOT CREATOR • DEVELOPER
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <div class="line"></div>
+
+
+    <div class="info">
+
+      <div class="item">
+
+        <div class="icon">
+          ☎
+        </div>
+
+        <div>
+          <div class="label">
+            CONTACT
+          </div>
+
+          <div class="value">
+            085137724172
+          </div>
+        </div>
+
+      </div>
+
+
+      <div class="item">
+
+        <div class="icon">
+          ◈
+        </div>
+
+        <div>
+          <div class="label">
+            POSITION
+          </div>
+
+          <div class="value">
+            OWNER & CREATOR OF BOT
+          </div>
+        </div>
+
+      </div>
+
+
+      <div class="item">
+
+        <div class="icon">
+          ⚡
+        </div>
+
+        <div>
+          <div class="label">
+            DEVELOPER ID
+          </div>
+
+          <div class="value">
+            FARZHDYTL • OFFICIAL
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <div class="socialTitle">
+      SOCIAL NETWORK
+    </div>
+
+
+    <div class="social">
+
+      <div class="socialItem">
+
+        <div class="socialName">
+          TIKTOK
+        </div>
+
+        <div class="socialUser">
+          @FARZHDYTL
+        </div>
+
+      </div>
+
+
+      <div class="socialItem">
+
+        <div class="socialName">
+          TELEGRAM
+        </div>
+
+        <div class="socialUser">
+          @FARZHDYTL
+        </div>
+
+      </div>
+
+
+      <div class="socialItem">
+
+        <div class="socialName">
+          INSTAGRAM
+        </div>
+
+        <div class="socialUser">
+          @FARZHDYTL
+        </div>
+
+      </div>
+
+
+      <div class="socialItem">
+
+        <div class="socialName">
+          WHATSAPP
+        </div>
+
+        <div class="socialUser">
+          085137724172
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <div class="bottom">
+
+    <div class="bottomTop">
+
+      <div class="creator">
+        ENGINEERED BY FARZHDYTL
+      </div>
+
+      <div class="version">
+        v∞.01
+      </div>
+
+    </div>
+
+    <div class="credit">
+      Specially designed for
+      <b>FARZHDYTL MULTI-DEVICE BOT</b>.
+      <br>
+      © 2026 FARZHDYTL • ALL SYSTEMS OPERATIONAL
+    </div>
+
+  </div>
+
+
+  <div class="footer">
+    DIGITAL OWNER CARD // FARZHDYTL
+  </div>
+
+
+  <!-- BACKSOUND -->
+
+  <audio
+    id="bgMusic"
+    src="https://files.catbox.moe/s9h1ua.mp3"
+    autoplay
+    loop
+    playsinline>
+  </audio>
+
+</div>
+
+
+<script>
+
+const bgMusic =
+  document.getElementById("bgMusic");
+
+
+/* Volume backsound */
+
+bgMusic.volume = 0.35;
+
+
+/* Coba autoplay */
+
+bgMusic.play().catch(()=>{});
+
+
+/*
+  Beberapa WebView/browser
+  memblokir autoplay.
+
+  Kalau diblokir, musik akan
+  mulai ketika user pertama
+  kali menyentuh kartu.
+*/
+
+function startMusic(){
+
+  bgMusic.play().catch(()=>{});
+
+}
+
+document.addEventListener(
+  "click",
+  startMusic,
+  {once:true}
+);
+
+document.addEventListener(
+  "touchstart",
+  startMusic,
+  {once:true}
+);
+
+</script>
