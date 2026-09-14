@@ -1,0 +1,709 @@
+<style>
+*{
+  -webkit-tap-highlight-color:transparent;
+  user-select:none;
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
+
+body{
+  background:transparent;
+  font-family:-apple-system,BlinkMacSystemFont,sans-serif;
+  color:#fff;
+  overflow:hidden;
+}
+
+.wrapper{
+  width:100%;
+  max-width:480px;
+  margin:auto;
+  padding:12px;
+}
+
+.card{
+  background:linear-gradient(180deg,#0f121a,#090c12);
+  border:2px solid #3b82f6;
+  border-radius:20px;
+  padding:14px;
+  box-shadow:0 14px 44px rgba(0,0,0,.8);
+}
+
+.header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:12px;
+}
+
+.title{
+  font-size:11px;
+  letter-spacing:1.4px;
+  color:#3b82f6;
+  font-weight:900;
+}
+
+.status{
+  font-size:11px;
+  font-weight:900;
+  background:rgba(59,130,246,.12);
+  color:#60a5fa;
+  padding:5px 9px;
+  border-radius:8px;
+}
+
+.stats{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:7px;
+  margin-bottom:10px;
+}
+
+.stat{
+  background:rgba(255,255,255,.05);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:10px;
+  padding:8px;
+  text-align:center;
+}
+
+.stat b{
+  display:block;
+  font-size:17px;
+  color:#60a5fa;
+}
+
+.stat span{
+  font-size:8px;
+  color:#64748b;
+  font-weight:900;
+  letter-spacing:.7px;
+}
+
+#screen{
+  height:260px;
+  border-radius:16px;
+  border:2px solid #1e293b;
+  background:
+    radial-gradient(
+      circle at center,
+      rgba(59,130,246,.08),
+      transparent 60%
+    ),
+    #080b11;
+
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  position:relative;
+  overflow:hidden;
+}
+
+#screen:before{
+  content:"";
+  position:absolute;
+  width:100%;
+  height:1px;
+  background:rgba(59,130,246,.2);
+  top:50%;
+  box-shadow:
+    0 -55px rgba(59,130,246,.08),
+    0 55px rgba(59,130,246,.08);
+}
+
+#label{
+  font-size:9px;
+  color:#64748b;
+  font-weight:900;
+  letter-spacing:2px;
+  margin-bottom:10px;
+}
+
+#code{
+  font-size:48px;
+  font-weight:1000;
+  letter-spacing:7px;
+  color:#60a5fa;
+  text-shadow:0 0 20px rgba(59,130,246,.8);
+  z-index:2;
+}
+
+#instruction{
+  margin-top:10px;
+  font-size:11px;
+  color:#94a3b8;
+  z-index:2;
+}
+
+#timerBar{
+  position:absolute;
+  bottom:0;
+  left:0;
+  height:4px;
+  width:100%;
+  background:#3b82f6;
+  transition:width .1s linear;
+}
+
+.keypad{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:8px;
+  margin-top:10px;
+}
+
+.key{
+  height:48px;
+  border:1px solid #334155;
+  border-radius:10px;
+  background:#111827;
+  color:#fff;
+  font-size:17px;
+  font-weight:900;
+  cursor:pointer;
+  transition:.1s;
+}
+
+.key:active{
+  transform:scale(.92);
+  background:#2563eb;
+}
+
+.key.disabled{
+  opacity:.35;
+  pointer-events:none;
+}
+
+.controls{
+  display:flex;
+  gap:8px;
+  margin-top:10px;
+}
+
+.btn{
+  flex:1;
+  border:0;
+  border-radius:10px;
+  padding:11px;
+  color:#fff;
+  font-size:12px;
+  font-weight:900;
+  cursor:pointer;
+}
+
+.start{
+  background:linear-gradient(135deg,#3b82f6,#2563eb);
+}
+
+.reset{
+  background:linear-gradient(135deg,#ef4444,#b91c1c);
+}
+
+#message{
+  display:none;
+  position:absolute;
+  inset:0;
+  background:rgba(5,8,14,.94);
+  align-items:center;
+  justify-content:center;
+  flex-direction:column;
+  z-index:10;
+  text-align:center;
+}
+
+#message h2{
+  font-size:25px;
+  color:#60a5fa;
+}
+
+#message p{
+  margin-top:7px;
+  color:#94a3b8;
+  font-size:11px;
+}
+
+.credit{
+  margin-top:11px;
+  padding-top:8px;
+  border-top:1px dashed rgba(255,255,255,.12);
+  text-align:center;
+  color:#64748b;
+  font-size:9px;
+  font-weight:900;
+  letter-spacing:1px;
+}
+
+.credit span{
+  color:#3b82f6;
+}
+</style>
+
+<body>
+
+<div class="wrapper">
+
+<div class="card">
+
+  <div class="header">
+
+    <div class="title">
+      ◈ FARZHDYTL-MINI HACK
+    </div>
+
+    <div class="status" id="status">
+      OFFLINE
+    </div>
+
+  </div>
+
+
+  <div class="stats">
+
+    <div class="stat">
+      <b id="score">0</b>
+      <span>SCORE</span>
+    </div>
+
+    <div class="stat">
+      <b id="level">1</b>
+      <span>LEVEL</span>
+    </div>
+
+    <div class="stat">
+      <b id="combo">0</b>
+      <span>COMBO</span>
+    </div>
+
+  </div>
+
+
+  <div id="screen">
+
+    <div id="label">
+      ACCESS CODE
+    </div>
+
+    <div id="code">
+      ----
+    </div>
+
+    <div id="instruction">
+      Tekan angka sesuai kode
+    </div>
+
+    <div id="timerBar"></div>
+
+
+    <div id="message">
+
+      <h2 id="resultTitle">
+        SYSTEM LOCKED
+      </h2>
+
+      <p id="resultText">
+        Tekan START untuk mencoba lagi
+      </p>
+
+    </div>
+
+  </div>
+
+
+  <div class="keypad">
+
+    <button class="key">1</button>
+    <button class="key">2</button>
+    <button class="key">3</button>
+
+    <button class="key">4</button>
+    <button class="key">5</button>
+    <button class="key">6</button>
+
+    <button class="key">7</button>
+    <button class="key">8</button>
+    <button class="key">9</button>
+
+    <button class="key">0</button>
+
+  </div>
+
+
+  <div class="controls">
+
+    <button class="btn start" id="start">
+      ⚡ START HACK
+    </button>
+
+    <button class="btn reset" id="reset">
+      ↻ RESET
+    </button>
+
+  </div>
+
+
+  <div class="credit">
+    SYSTEM ENGINEERED BY
+    <span>FARZHDYTL</span>
+    ⚡
+  </div>
+
+</div>
+
+</div>
+
+
+<script>
+
+(function(){
+
+var codeEl =
+document.getElementById("code");
+
+var scoreEl =
+document.getElementById("score");
+
+var levelEl =
+document.getElementById("level");
+
+var comboEl =
+document.getElementById("combo");
+
+var statusEl =
+document.getElementById("status");
+
+var timerBar =
+document.getElementById("timerBar");
+
+var message =
+document.getElementById("message");
+
+var resultTitle =
+document.getElementById("resultTitle");
+
+var resultText =
+document.getElementById("resultText");
+
+var startBtn =
+document.getElementById("start");
+
+var resetBtn =
+document.getElementById("reset");
+
+var keys =
+document.querySelectorAll(".key");
+
+
+var code = "";
+
+var progress = 0;
+
+var score = 0;
+
+var level = 1;
+
+var combo = 0;
+
+var playing = false;
+
+var timer = null;
+
+var timeLimit = 5000;
+
+
+/*
+=========================
+BUAT CODE RANDOM
+=========================
+*/
+
+function generateCode(){
+
+  var length =
+    Math.min(3 + level,7);
+
+  code = "";
+
+  for(
+    var i=0;
+    i<length;
+    i++
+  ){
+
+    code +=
+      Math.floor(Math.random()*10);
+
+  }
+
+  codeEl.textContent = code;
+
+  progress = 0;
+
+}
+
+
+/*
+=========================
+START
+=========================
+*/
+
+function startGame(){
+
+  clearInterval(timer);
+
+  playing = true;
+
+  score = 0;
+
+  level = 1;
+
+  combo = 0;
+
+  scoreEl.textContent = score;
+
+  levelEl.textContent = level;
+
+  comboEl.textContent = combo;
+
+  statusEl.textContent = "CONNECTED";
+
+  message.style.display = "none";
+
+  generateCode();
+
+  startTimer();
+
+}
+
+
+/*
+=========================
+TIMER
+=========================
+*/
+
+function startTimer(){
+
+  clearInterval(timer);
+
+  var startTime = Date.now();
+
+  timerBar.style.width = "100%";
+
+  timer = setInterval(function(){
+
+    var elapsed =
+      Date.now() - startTime;
+
+    var percent =
+      100 - (elapsed / timeLimit * 100);
+
+    timerBar.style.width =
+      Math.max(0,percent) + "%";
+
+
+    if(elapsed >= timeLimit){
+
+      clearInterval(timer);
+
+      gameOver();
+
+    }
+
+  },50);
+
+}
+
+
+/*
+=========================
+TOMBOL ANGKA
+=========================
+*/
+
+for(
+  var i=0;
+  i<keys.length;
+  i++
+){
+
+  keys[i].onclick=function(){
+
+    if(!playing) return;
+
+    var pressed =
+      this.textContent;
+
+    var expected =
+      code.charAt(progress);
+
+
+    /*
+      BENAR
+    */
+
+    if(pressed === expected){
+
+      progress++;
+
+      combo++;
+
+      score +=
+        10 * combo;
+
+      scoreEl.textContent =
+        score;
+
+      comboEl.textContent =
+        combo;
+
+
+      /*
+        CODE SELESAI
+      */
+
+      if(progress >= code.length){
+
+        level++;
+
+        levelEl.textContent =
+          level;
+
+        combo += 1;
+
+        comboEl.textContent =
+          combo;
+
+        generateCode();
+
+        timeLimit =
+          Math.max(
+            1800,
+            5000 - (level * 200)
+          );
+
+        startTimer();
+
+      }
+
+    }
+
+
+    /*
+      SALAH
+    */
+
+    else{
+
+      combo = 0;
+
+      comboEl.textContent =
+        combo;
+
+      score = Math.max(
+        0,
+        score - 10
+      );
+
+      scoreEl.textContent =
+        score;
+
+      /*
+        Generate code baru
+      */
+
+      generateCode();
+
+      startTimer();
+
+    }
+
+  };
+
+}
+
+
+/*
+=========================
+GAME OVER
+=========================
+*/
+
+function gameOver(){
+
+  playing = false;
+
+  statusEl.textContent =
+    "LOCKED";
+
+  timerBar.style.width =
+    "0%";
+
+  resultTitle.textContent =
+    "🔒 SYSTEM LOCKED";
+
+  resultText.textContent =
+    "Score: " + score +
+    " • Level: " + level;
+
+  message.style.display =
+    "flex";
+
+}
+
+
+/*
+=========================
+RESET
+=========================
+*/
+
+resetBtn.onclick=function(){
+
+  clearInterval(timer);
+
+  playing = false;
+
+  score = 0;
+
+  level = 1;
+
+  combo = 0;
+
+  progress = 0;
+
+  scoreEl.textContent = "0";
+
+  levelEl.textContent = "1";
+
+  comboEl.textContent = "0";
+
+  codeEl.textContent = "----";
+
+  statusEl.textContent = "OFFLINE";
+
+  timerBar.style.width = "100%";
+
+  message.style.display = "none";
+
+};
+
+
+/*
+=========================
+START BUTTON
+=========================
+*/
+
+startBtn.onclick=function(){
+
+  startGame();
+
+};
+
+})();
+
+</script>
+
+</body>
